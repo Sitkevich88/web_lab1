@@ -1,0 +1,255 @@
+<!DOCTYPE HTML>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Web project #1</title>
+    <link rel="icon" href="icon-programmer-25.jpg">
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            background-color: #edeef0;
+        }
+        .grid-container {
+            display: grid;
+            width: 100%;
+            height: 100vh;
+            grid-template-columns: auto auto;
+            /*grid-template-rows: 1000px;*/
+        }
+        .header-or-footer{
+            display: block;
+            width: 100%;
+            color: #ffffff;
+            margin: 0 0 0 0;
+            background-color: #125e5e;
+        }
+        .header{
+            letter-spacing: 2px;
+            padding: 10px 0 10px 0;
+            text-align: center;
+            font-style: italic;
+        }
+        .footer{
+            position: -webkit-sticky; /* Safari */
+            position: sticky;
+            height: 40px;
+            padding: 0;
+            bottom: 0;
+        }
+        p.header{
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .panel.leftpane{
+            /*background-color: darkslategrey;*/
+            padding: 10px 10px;
+        }
+        .panel.rightpane{
+            /*background-color: darkseagreen;*/
+            padding: 10px;
+            overflow: auto;
+        }
+        #leftInfo{
+            position: -webkit-sticky; /* Safari */
+            position: sticky;
+            top: 20px;
+            padding: 10px;
+            background-color: #125e5e;
+        }
+        .image{
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        #graph{
+            margin: 0 auto;
+        }
+        .form{
+            background-color: #53eeee;
+            display: block;
+            margin: auto;
+            padding: 10px;
+        }
+        input{
+            width: 50px;
+        }
+        #php_results{
+            width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+            text-align: center;
+            padding: 3px;
+            font-size: medium;
+            font-family: "Times New Roman", Times, serif;
+            font-style: normal;
+            font-weight: normal;
+
+        }
+        th{
+            background-color: #83a4e5;
+            font-weight: bold;
+            /*position: -webkit-sticky; !* Safari *!
+            position: sticky;
+            top: 20px;*/
+        }
+        table tr:nth-child(2n){
+            background-color: #daf5f5;
+        }
+        table tr:nth-child(2n+1){
+            background-color: #53eeee;
+        }
+        tr > td:hover{
+            border-color: red;
+            background-color: greenyellow;
+        }
+        /*tr:n{
+            background-color: lightcoral;
+        }*/
+
+    </style>
+
+</head>
+<body>
+    <header class="header header-or-footer">
+        <p>Ситкевич Валерий Андреевич P3214 вариант 14205</p>
+    </header>
+    <div class="grid-container">
+        <div class="panel leftpane">
+            <div id="leftInfo">
+                <img class="image" src="areas.png" id="graph" alt="Фото графика">
+                <br>
+                <form class="form" id="myForm" role="form" method="post">
+                    <label for="xname">X: </label>
+                    <input type="text" id="xname" name="x"><br><br>
+                    <label for="yname">Y: </label>
+                    <input type="text" id="yname" name="y"><br><br>
+                    <label for="rname">R: </label>
+                    <input type="text" id="rname" name="r"><br><br>
+                    <button type="submit" id="submitRequest">Отправить</button>
+                </form>
+            </div>
+        </div>
+        <div class="panel rightpane">
+            <table id="php_results">
+                <tbody id="tbody-results">
+                <tr>
+                    <th>X</th>
+                    <th>Y</th>
+                    <th>R</th>
+                    <th>Результат</th>
+                    <th>Время выполнения</th>
+                    <th>Время получения</th>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <footer class="footer header-or-footer">
+
+    </footer>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!--<script src="jquery.validate.min.js"></script>-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.11.1/jquery.validate.min.js"></script>
+    <!--<script src="js/jquery.validate.js"></script>-->
+    <script>
+        /*$('#rname').alphanum({
+            allowLatin : false,
+            allowOtherCharSets : false,
+            allow : '+, (, )',    // Allow extra characters
+        });
+        $("#yname").numeric("integer");
+        $(document).ready(function () {
+            $("#xname").alphanum({
+                maxPreDecimalPlaces : 1,   // The max number digits before the decimal point
+                max : 3,   // The max numeric value allowed
+                min : -3    // The min numeric value allowed
+            });
+        });*/
+
+        $(document).ready(function () {
+
+            $("#myForm").validate({
+                rules: {
+                    "x": {
+                        required: true,
+                        min: -3,
+                        max: 3
+                    },
+                    "y": {
+                        required: true,
+                        min: -5,
+                        max: 5
+                    },
+                    "r": {
+                        required: true,
+                        min: 2,
+                        max: 5
+                    }
+                },
+                submitHandler: function (form) {
+                    var formData = $(form).serialize();
+                    /*
+                    var today = new Date();
+                    var hours = today.getHours()-today.getTimezoneOffset()
+                    var time = hours + ":" + today.getMinutes() + ":" + today.getSeconds()+ ":" + today.getMilliseconds();*/
+                    var time = new Date().getTime()/60;
+                    formData+='&now='+time;
+                    $.ajax({
+                        url: "main.php",
+                        type: "post",
+                        data: formData,
+                        beforeSend: function () {
+                            /*console.log(formData)*/
+                        },
+                        success: function (data) {
+                            /*console.log(time)
+                            console.log(data);*/
+                            /*document.getElementById("myForm").reset();*/
+                            document.getElementById("tbody-results").innerHTML += data;
+                        }
+                    });
+                }
+            });
+
+        });
+        /*$('#xname').keypress(function (e) {
+            var txt = String.fromCharCode(e.which);
+            if (!txt.match(/[0-9&. ]/)) {
+                return false;
+            }
+        });*/
+        $('#xname').keypress(function (e) {
+            var txt = String.fromCharCode(e.which);
+            if (!txt.match(/[0-9&.-]/)) {
+                return false;
+            }
+        });
+        $('#yname').keypress(function (e) {
+            var txt = String.fromCharCode(e.which);
+            if (!txt.match(/[0-9&.-]/)) {
+                return false;
+            }
+        });
+        $('#rname').keypress(function (e) {
+            var txt = String.fromCharCode(e.which);
+            if (!txt.match(/[0-9&.]/)) {
+                return false;
+            }
+        });
+        /*const input = document.getElementById("xname"); // gets the element (the input) by it's id
+        input.addEventListener("input", (event) =>  {
+            const char = String.fromCharCode(event.keyCode); // changes the keycode from a int to a string
+            if (!(/[0-9\.]/.test(char))) {
+                event.preventDefault(); // prevents the default (which is adding the character to the value)
+            }
+        });*/
+    </script>
+</body>
+</html>
