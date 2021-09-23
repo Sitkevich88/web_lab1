@@ -200,7 +200,7 @@
                     var hours = today.getHours()-today.getTimezoneOffset()
                     var time = hours + ":" + today.getMinutes() + ":" + today.getSeconds()+ ":" + today.getMilliseconds();*/
                     var time = new Date().getTime()/60;
-                    formData+='&now='+time;
+                    /*formData+='&now='+time;*/
                     $.ajax({
                         url: "main.php",
                         type: "post",
